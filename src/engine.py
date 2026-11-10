@@ -6,15 +6,15 @@ class MonteCarloEngine:
         self.num_paths = num_paths
         self.num_steps = num_steps
 
-    def simulate_gbm(self, env: MarketEnvironment) -> np.ndarray:
-        dt = env.T / self.num_steps
+    def simulate_gbm(self, env: MarketEnvironment, T: float) -> np.ndarray:
+        dt = T / self.num_steps
         
         Z = np.random.standard_normal((self.num_steps, self.num_paths))
         
-        dW = Z * np.sqrt(dt)
-        W = np.cumsum(dW, axis=0)
+        dw = Z * np.sqrt(dt)
+        W = np.cumsum(dw, axis=0)
         
-        time_steps = np.linspace(dt, env.T, self.num_steps)[:, np.newaxis]
+        time_steps = np.linspace(dt, T, self.num_steps)[:, np.newaxis]
         
         drift = (env.r - 0.5 * env.sigma**2) * time_steps
         diffusion = env.sigma * W
@@ -23,5 +23,5 @@ class MonteCarloEngine:
         
         S_0_row = np.full((1, self.num_paths), env.S0)
         paths = np.vstack((S_0_row, S))
-        
+    
         return paths
