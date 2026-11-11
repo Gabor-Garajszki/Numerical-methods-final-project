@@ -11,8 +11,11 @@ class MonteCarloEngine:
         self.num_paths = num_paths
         self.days_per_year = days_per_year
 
-    def simulate_gbm(self, env: MarketEnvironment, T: float) -> np.ndarray:
+    def simulate_gbm(self, env: MarketEnvironment, T: float, seed: int = None) -> np.ndarray:
         """calculate the stock's price in n paths for T year"""
+        
+        if seed is not None:        #for the greeks we can use fix seed
+            np.random.seed(seed)
 
         num_steps = int(T * self.days_per_year)         #calculates how many steps will be till maturity
         
